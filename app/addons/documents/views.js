@@ -43,37 +43,55 @@ function(app, FauxtonAPI, Components, Documents, Databases, Views, QueryOptions,
     className: "header-right",
     template: "addons/documents/templates/header_alldocs",
     events: {
-      'select .selectAllDocs': 'selectAllDocs'
+      'click .toggle-select-menu': 'selectAllDocs'
     },
+
     initialize: function(options){
       //adding the database to the object
       this.database = options.database;
+      _.bindAll(this);
+      this.selectVisible = false;
     },
-    selectAllDocs: function(){
+
+    selectAllDocs: function(e){
       //trigger event to select all in other view
-    },
-    updateApiUrl: function(api){
-      //this will update the api bar when the route changes
-      //you can find the method that updates it in components.js Components.ApiBar()
-      this.apiBar && this.apiBar.update(api);
-    },
-    serialize: function() {
-      //basically if you want something in a template, You can define it here
-      return {
-        database: this.database.get('id')
-      };
-    },
-    beforeRender:function(){
-      //insert DB search dropdown
+      FauxtonAPI.Events.trigger("documents:select-all");
 
-      //insert top create level dropdown with gear icon
+      this.$('.toggle-select-menu').toggleClass('active');
 
+      //trigger event to change the header
+      this.toggleSelectMenu();
+    },
+
+    toggleSelectMenu: function(){
+      if (this.selectVisible){
+        this.selectVisible = false;
+        this.selectMenu.remove();
+        this.addAllDocsMenu();
+      } else {
+        this.removeAllDocsMenu();
+        this.addSelectMenu();
+      }
+    },
+
+    addSelectMenu: function(){
+      this.selectVisible = true;
+      this.selectMenu =  this.insertView('#header-select-menu', new Views.SelectMenu({}));
+      this.selectMenu.render();
+    },
+
+    removeAllDocsMenu: function(){
+      this.headerSearch.remove();
+      this.queryOptions.remove();
+      this.apiBar.remove();
+    },
+
+    addAllDocsMenu: function(){
       //search docs
-      this.setView("#header-search", new Views.JumpToDoc({
+      this.headerSearch = this.insertView("#header-search", new Views.JumpToDoc({
         database: this.database,
         collection: this.database.allDocs
       }));
-
       //insert queryoptions
       //that file is included in require() above and the argument is QueryOptions
       // and it wants all these params:
@@ -94,7 +112,7 @@ function(app, FauxtonAPI, Components, Documents, Databases, Views, QueryOptions,
         this.viewName = options.viewName;
         this.ddocName = options.ddocName;
       */
-      this.setView("#query-options", new QueryOptions.AdvancedOptions({
+      this.queryOptions = this.insertView("#query-options", new QueryOptions.AdvancedOptions({
         updateViewFn: this.updateAllDocs,
         previewFn: this.previewView,
         database: this.database,
@@ -105,7 +123,28 @@ function(app, FauxtonAPI, Components, Documents, Databases, Views, QueryOptions,
       //Moved the apibar view into the components file so you can include it in your views
       this.apiBar = this.insertView("#header-api-bar", new Components.ApiBar({}));
 
+      this.apiBar.render();
+      this.queryOptions.render();
+      this.headerSearch.render();
     },
+
+    updateApiUrl: function(api){
+      //this will update the api bar when the route changes
+      //you can find the method that updates it in components.js Components.ApiBar()
+      this.apiBar && this.apiBar.update(api);
+    },
+
+    serialize: function() {
+      //basically if you want something in a template, You can define it here
+      return {
+        database: this.database.get('id')
+      };
+    },
+
+    beforeRender:function(){
+      this.addAllDocsMenu();
+    },
+
     //moved from alldocs layout
     updateAllDocs: function (event, paramInfo) {
       event.preventDefault();
@@ -145,53 +184,28 @@ function(app, FauxtonAPI, Components, Documents, Databases, Views, QueryOptions,
       FauxtonAPI.navigate(fragment, {trigger: false});
       FauxtonAPI.triggerRouteEvent('updateAllDocs', {allDocs: true});
     },
+
     previewView: function (event) {
       event.preventDefault();
     }
   });
 
-
-  //header that shows up when a doc is selected
-  // when a Doc is selected, trigger a routeEvent to render this
-  // the routeEvent will determine which header to show (??)
-  Views.DocEditHeader = FauxtonAPI.View.extend({
-    template: "addons/documents/templates/header_doc_edit",
+  // select docs header
+  Views.SelectMenu = FauxtonAPI.View.extend({
+    template:"addons/documents/templates/select-doc-menu",
     events: {
-      'select .selectAllDocs': 'selectAllDocs'
+      "click button.all": "selectAll",
+      "click button.js-bulk-delete": "bulkDelete",
+      "click #collapse": "collapse"
     },
-    initialize: function(options){
-
+    bulkDelete: function(){
+      FauxtonAPI.Events.trigger("documents:bulkDelete");
     },
-    selectAllDocs: function(){
-      //trigger event to select all in other view
+    selectAll: function(){
+      FauxtonAPI.Events.trigger("documents:selectAll");
     },
-    afterRender:function(){
-      //insert DB search dropdown
-
-      //insert top create level dropdown with gear icon
-    }
-  });
-
-  Views.DocsHeader = FauxtonAPI.View.extend({
-    template: "addons/documents/templates/header_selecteddoc",
-    events: {
-      'select .selectAllDocs': 'selectAllDocs'
-    },
-    initialize: function(options){
-
-    },
-    selectAllDocs: function(){
-      //trigger event to select all in other view
-    },
-    afterRender:function(){
-      //insert DB search dropdown
-
-      //insert top create level dropdown with gear icon
-
-      //search docs
-
-      //insert queryoptions
-
+    collapse: function(){
+      FauxtonAPI.Events.trigger("documents:collapse");
     }
   });
 
@@ -244,8 +258,12 @@ function(app, FauxtonAPI, Components, Documents, Databases, Views, QueryOptions,
     initialize: function (options) {
       this.checked = options.checked;
       this.expanded = options.expanded;
+      _.bindAll(this);
+      FauxtonAPI.Events.on("documents:select-all", this.showSelect);
     },
-
+    showSelect: function(){
+      this.$('.select').toggle();
+    },
     events: {
       "click button.delete": "destroy",
       "dblclick pre.prettyprint": "edit"
@@ -374,14 +392,12 @@ function(app, FauxtonAPI, Components, Documents, Databases, Views, QueryOptions,
   Views.AllDocsList = FauxtonAPI.View.extend({
     template: "addons/documents/templates/all_docs_list",
     events: {
-      "click button.all": "selectAll",
-      "click button.js-bulk-delete": "bulkDelete",
-      "click #collapse": "collapse",
       "click .all-docs-item": "toggleDocument",
       "click #js-end-results": "scrollToQuery"
     },
 
     initialize: function (options) {
+      _.bindAll(this);
       this.nestedView = options.nestedView || Views.Document;
       this.rows = {};
       this.viewList = !!options.viewList;
@@ -400,6 +416,10 @@ function(app, FauxtonAPI, Components, Documents, Databases, Views, QueryOptions,
       if (!this.viewList) {
         this.bulkDeleteDocsCollection = options.bulkDeleteDocsCollection;
       }
+
+      FauxtonAPI.Events.on("documents:bulkDelete", this.bulkDelete);
+      FauxtonAPI.Events.on("documents:selectAll", this.selectAll);
+      FauxtonAPI.Events.on("documents:collapse", this.collapse);
     },
 
     removeDocuments: function (ids) {
