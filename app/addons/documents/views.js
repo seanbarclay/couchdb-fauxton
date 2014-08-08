@@ -201,8 +201,10 @@ function(app, FauxtonAPI, Components, Documents, Databases, Views, QueryOptions,
     bulkDelete: function(){
       FauxtonAPI.Events.trigger("documents:bulkDelete");
     },
-    selectAll: function(){
-      FauxtonAPI.Events.trigger("documents:selectAll");
+    selectAll: function(evt){
+      this.$(evt.target).toggleClass('active');
+
+      FauxtonAPI.Events.trigger("documents:selectAll", this.$(evt.target).hasClass('active'));
     },
     collapse: function(){
       FauxtonAPI.Events.trigger("documents:collapse");
@@ -261,7 +263,8 @@ function(app, FauxtonAPI, Components, Documents, Databases, Views, QueryOptions,
       _.bindAll(this);
       FauxtonAPI.Events.on("documents:select-all", this.showSelect);
     },
-    showSelect: function(){
+    showSelect: function(bool){
+      this.showSelect = bool;
       this.$('.select').toggle();
     },
     events: {
@@ -506,8 +509,8 @@ function(app, FauxtonAPI, Components, Documents, Databases, Views, QueryOptions,
       });
     },
 
-    selectAll: function(evt){
-      $('#doc-list').find("input:checkbox").prop('checked', !$(evt.target).hasClass('active')).trigger('change');
+    selectAll: function(checked){
+      this.$el.find("input:checkbox").prop('checked', checked).trigger('click');
     },
 
     serialize: function() {
@@ -519,8 +522,6 @@ function(app, FauxtonAPI, Components, Documents, Databases, Views, QueryOptions,
     },
 
     collapse: function (event) {
-      event.preventDefault();
-
       if (this.expandDocs) {
         this.expandDocs = false;
       } else {
