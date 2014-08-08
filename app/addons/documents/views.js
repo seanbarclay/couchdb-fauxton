@@ -51,16 +51,17 @@ function(app, FauxtonAPI, Components, Documents, Databases, Views, QueryOptions,
       this.database = options.database;
       _.bindAll(this);
       this.selectVisible = false;
+      FauxtonAPI.Events.on('advancedOptions:updateView', this.updateAllDocs);
     },
 
     selectAllDocs: function(e){
       //trigger event to select all in other view
-      FauxtonAPI.Events.trigger("documents:select-all");
-
       this.$('.toggle-select-menu').toggleClass('active');
 
       //trigger event to change the header
       this.toggleSelectMenu();
+      FauxtonAPI.Events.trigger("documents:show-select-all",this.selectVisible);
+
     },
 
     toggleSelectMenu: function(){
@@ -112,9 +113,8 @@ function(app, FauxtonAPI, Components, Documents, Databases, Views, QueryOptions,
         this.viewName = options.viewName;
         this.ddocName = options.ddocName;
       */
+
       this.queryOptions = this.insertView("#query-options", new QueryOptions.AdvancedOptions({
-        updateViewFn: this.updateAllDocs,
-        previewFn: this.previewView,
         database: this.database,
         hasReduce: false,
         showPreview: false,
@@ -183,10 +183,6 @@ function(app, FauxtonAPI, Components, Documents, Databases, Views, QueryOptions,
 
       FauxtonAPI.navigate(fragment, {trigger: false});
       FauxtonAPI.triggerRouteEvent('updateAllDocs', {allDocs: true});
-    },
-
-    previewView: function (event) {
-      event.preventDefault();
     }
   });
 
@@ -260,12 +256,13 @@ function(app, FauxtonAPI, Components, Documents, Databases, Views, QueryOptions,
     initialize: function (options) {
       this.checked = options.checked;
       this.expanded = options.expanded;
+      this.showSelect = false;
       _.bindAll(this);
-      FauxtonAPI.Events.on("documents:select-all", this.showSelect);
+      FauxtonAPI.Events.on("documents:show-select-all", this.showSelectBox);
     },
-    showSelect: function(bool){
+    showSelectBox: function(bool){
       this.showSelect = bool;
-      this.$('.select').toggle();
+      this.$('.select').toggle(this.showSelect);
     },
     events: {
       "click button.delete": "destroy",
@@ -280,6 +277,7 @@ function(app, FauxtonAPI, Components, Documents, Databases, Views, QueryOptions,
 
     serialize: function() {
       return {
+        showSelect: this.showSelect,
         expanded: this.expanded,
         docID: this.model.get('_id'),
         doc: this.model,

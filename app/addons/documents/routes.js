@@ -373,6 +373,7 @@ function(app, FauxtonAPI, Components, Documents, Changes, DocEditor, Databases, 
 
       this.documentsView.setCollection(collection);
       this.documentsView.setParams(docParams, urlParams);
+      this.leftheader.forceRender();
       this.documentsView.forceRender();
 
       this.headerRight.updateApiUrl([collection.urlRef("apiurl", urlParams), "docs"]);

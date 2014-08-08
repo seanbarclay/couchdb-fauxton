@@ -12,7 +12,7 @@ License for the specific language governing permissions and limitations under
 the License.
 -->
 
-<div class="select" style="display:none"><input <%- checked ? 'checked="checked"' : '' %> type="checkbox" class="js-row-select"></div>
+<div class="select" <% if (!showSelect){ %>style="display:none"<%}%> ><input <%- checked ? 'checked="checked"' : '' %> type="checkbox" class="js-row-select"></div>
 <div class="doc-item  ">
 
   <header>
