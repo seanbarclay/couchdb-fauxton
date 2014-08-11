@@ -761,8 +761,8 @@ function(app, FauxtonAPI, ace, spin, ZeroClipboard) {
     },
     triggerEvent: function(e){
       e.preventDefault();
-
-      console.log('works');
+      var eventTrigger = $(e.currentTarget).attr('triggerEvent');
+      FauxtonAPI.Events.trigger(eventTrigger);
     },
     update: function(links){
       this.links = links;
