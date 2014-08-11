@@ -192,19 +192,10 @@ function(app, FauxtonAPI, Components, Documents, Changes, DocEditor, Databases, 
         {"name": this.data.database.id, "link": Databases.databaseUrl(this.data.database)}
       ];
 
-      var dropdown = [{
-        links: [{
-          title: 'Duplicate Index',
-          icon: 'fonticon-documents'
-        },{
-          title: 'Delete',
-          icon: 'fonticon-trash'
-        }]
-      }];
 
       this.leftheader = this.setView("#breadcrumbs", new Components.LeftHeader({
         crumbs: crumbs,
-        dropdownMenu: dropdown
+        dropdownMenu: this.setUpDropdown()
       }));
 
       /* --------------------------------------------------
@@ -222,6 +213,54 @@ function(app, FauxtonAPI, Components, Documents, Changes, DocEditor, Databases, 
         collection: this.data.designDocs,
         database: this.data.database
       }));
+    },
+
+    setUpDropdown: function(){
+      var defaultMenuLinks = [{
+        links: [{
+          title: 'Replicate Database',
+          icon: 'fonticon-replicate',
+          url: '#/replication/'+this.databaseName
+        },{
+          title: 'Delete',
+          icon: 'fonticon-trash',
+          trigger: 'database:delete'
+        }]
+      }];
+
+      defaultMenuLinks.push({
+        title: 'Add new',
+        links: this.getExtensionLinks()
+      });
+
+      return defaultMenuLinks;
+    },
+
+    getExtensionLinks: function () {
+      var database = this.data.database,
+          newurlPrefix = "#" + database.url('app');
+
+      var menuLinks = [{
+          title: 'New Doc',
+          url: newurlPrefix + '/new',
+          icon: 'fonticon-plus-circled'
+        },{
+          title: 'New Design Doc',
+          url: newurlPrefix + '/new_view',
+          icon: 'fonticon-plus-circled'
+      }];
+
+      return _.reduce(FauxtonAPI.getExtensions('sidebar:links'), function (menuLinks, link) {
+
+        menuLinks.push({
+          title: link.title,
+          url: newurlPrefix + "/" + link.url,
+          icon: 'fonticon-plus-circled'
+        });
+
+        return menuLinks;
+     }, menuLinks);
+
     },
 
     resetAllDocsHeader: function(){
