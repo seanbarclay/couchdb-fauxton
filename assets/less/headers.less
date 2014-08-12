@@ -83,6 +83,11 @@
     > div{
       display:inline-block;
     }
+    .breadcrumb {
+      li:first-child{
+        border-right: 1px solid #ccc;
+      }
+    }
   }
   .breadcrumb {
     margin-bottom: 0;
@@ -98,7 +103,6 @@
         .two-pane & {
           padding:20px 10px;
           font-size: 19px;
-          border-right: 1px solid #ccc;
         }
       }
       color: @breadcrumbText;
@@ -121,16 +125,20 @@
     position: absolute;
     right: 0;
     top: 0;
+    .dropdown-toggle {
+      color: #666666;
+    }
     a {
+      padding: 10px 20px;
       text-decoration: none;
     }
     .dropdown {
       border-left: 1px solid #ccc;
-      padding: 20px;
+      padding: 20px 0px;
     }
     .dropdown-menu {
-      left: -105px;
-      top: 56px;
+      left: -109px;
+      top: 48px;
     }
   }
 }
