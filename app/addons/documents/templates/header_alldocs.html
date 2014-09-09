@@ -12,20 +12,26 @@ License for the specific language governing permissions and limitations under
 the License.
 -->
 
-  <!-- floats right -->
+<!-- floats right -->
 
-  <div id="header-api-bar" class="button"></div>
+<div id="header-api-bar" class="button"></div>
 
-  <!-- Query Options-->
-  <!--<div class="button header-query-options">
+<!-- Query Options-->
+<!--<div class="button header-query-options">
     <div id="query-options"></div>
   </div>-->
 
-  <!-- search (jump to doc)-->
-  <div id="header-search" class="js-search searchbox-container"></div>
+<!-- search (jump to doc)-->
+<div id="header-search" class="js-search searchbox-container"></div>
 
-  <!-- Select toggle -->
-  <!--<div id="header-select-all" class="button">
-    <span class="toggle-select-menu icon fonticon-ok-circled">Select</span>
-  </div>-->
+<!-- Select toggle -->
+<div id="header-select-all" class="button">
+  <a class="toggle-select-menu icon fonticon-ok-circled">Select</a>
+</div>
+
+<div id="select-options" class="hide">
+  <button type="button" class="button btn btn-small all" data-toggle="button">✓ All</button>
+  <button class="button btn btn-small disabled js-bulk-delete"><i class="icon-trash"></i></button>
+  <button id="collapse" class="button btn btn-small"><i class="icon-minus"></i> Collapse</button>
+</div>
 

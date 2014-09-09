@@ -210,6 +210,12 @@ function(app, FauxtonAPI, PagingCollection) {
       return JSON.stringify(data, null, "  ");
     },
 
+    prettyJSONnoId: function () {
+      var data = this.get("doc") ? this.get("doc") : this.attributes;
+      delete data._id;
+      return JSON.stringify(data, null, "  ");
+    },
+
     copy: function (copyId) {
       return $.ajax({
         type: 'COPY',
@@ -271,7 +277,7 @@ function(app, FauxtonAPI, PagingCollection) {
     },
 
     isEditable: function() {
-      return this.docType() != "reduction";
+      return this.docType() !== "reduction";
     },
     safeID: function() {
       var id = this.id || this.get("id");
@@ -280,8 +286,13 @@ function(app, FauxtonAPI, PagingCollection) {
     },
 
     prettyJSON: function() {
-      //var data = this.get("doc") ? this.get("doc") : this;
       return JSON.stringify(this, null, "  ");
+    },
+
+    prettyJSONnoId: function() {
+      var doc = this.toJSON();
+      delete doc.id;
+      return JSON.stringify(doc, null, "  ");
     }
   });
 
