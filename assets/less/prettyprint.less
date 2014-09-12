@@ -11,23 +11,28 @@
  *  the License.
  */
 
+@import "variables.less";
+
 pre.prettyprint {
-  background: #E5E0DD;
+  background: @docBkgd;
   border: none;
-  font-size: 83%;
+  font-size: 14px;
   line-height: 1.4;
   margin: 0;
   padding: 16px;
 }
 .prettyprint {
-  .pln, .pun,  .typ {
+  .pln, pun {
+    color: #ddd;
+  }
+  .typ {
     color: #333;
   }
   .kwd {
     color: #ff8300;
   }
   .str, .lit {
-    color: @red;
+    color: #ddd;
   }
   .com {
     color: #666;

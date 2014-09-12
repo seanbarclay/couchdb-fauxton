@@ -1,3 +1,6 @@
+@import "../../../../../assets/less/bootstrap/variables.less";
+@import "../../../../../assets/less/bootstrap/mixins.less";
+@import "../../../../../assets/less/variables.less";
 
 .sidenav{
   .nav-list > .active > a{
@@ -12,7 +15,7 @@
     color: white;
   }
   .dropdown-toggle:hover {
-    color: @linkRed
+    color: @linkColor
   }
   li{
     position: relative;
@@ -39,7 +42,7 @@
         &:hover {
           color: #fff;
           text-decoration: none;
-          background-color: @darkRed;
+          background-color: @linkColor;
         }
       }
     }
@@ -64,7 +67,7 @@
           color: white;
         }
         p{
-          background-color: @darkRed;
+          background-color: @linkColor;
         }
       }
       .accordion-list-item:hover + div.add-dropdown .dropdown-toggle{
@@ -76,7 +79,7 @@
       .accordion-list-item p{
         margin: 0;
         padding: 10px 13px 10px 36px;
-        color: @linkRed;
+        color: @linkColor;
       }
       .fonticon-play{
         font-size: 12px;
@@ -90,7 +93,7 @@
         right: 15px;
       }
       .dropdown-toggle:hover{
-        color: @linkRed
+        color: @linkColor
       }
     }
     > ul.accordion-body{

@@ -17,9 +17,9 @@
  *
  */
 @import "bootstrap/variables.less";
-@import "variables.less";
 @import "bootstrap/bootstrap.less";
 @import "bootstrap/mixins.less";
+@import "variables.less";
 @import "prettyprint.less";
 @import "pagination.less";
 @import "icons.less";
@@ -628,7 +628,7 @@ table.databases {
 
 #dashboard-lower-content{
   padding: 20px;
-  background-color: #F1F1F1;
+  background-color: @docPanelBkgd;
 }
 
 #dashboard-upper-content{
@@ -654,14 +654,15 @@ table.databases {
     }
     > li > a:hover,
     > li > a:focus{
-      background-color: @darkRed;
+      background-color: @linkColor;
       color: #fff;
     }
     li.active > a {
-      color: @darkRed;
+      color: @linkColor;
+      font-weight: bold;
     }
     > li > a{
-      color: @linkRed;
+      color: @linkColor;
       padding: 10px 13px 10px 24px;
       border-bottom: 1px solid #d3d7db;
       span{
@@ -1345,19 +1346,19 @@ div#per-page {
       width:100%;
       vertical-align: top;
       position: relative;
-      .border-radius(5px 5px 5px 5px);
+      .border-radius(@radius);
       .box-shadow(3px 4px 0 rgba(0, 0, 0, 0.3));
       border: 1px solid #000;
       header {
         font-weight: bold;
         position: relative;
         padding: 20px;
-        background-color: #777;
-        color: #3a2c2b;
-        border-bottom: 1px solid #000;
+        background-color: @docHeader;
+        color: @placeholderText;
+        border-bottom: 1px solid @docBorder;
         .header-id-number{
-          color: #fff;
-          margin-left: 10px;
+          color: @linkColor;
+          margin-left: 8px;
         }
       }
 
