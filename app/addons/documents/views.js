@@ -90,9 +90,23 @@ function(app, FauxtonAPI, Components, Documents, Databases, Views, QueryOptions,
     selectAllMenu: function(event){
       event.preventDefault();
       var $selectOptions = $('#select-options'),
+          $headerRightControls = $('#header-right-controls'),
           visible = !$selectOptions.is(':visible');
 
-      $selectOptions.toggle('fast');
+      $(event.target).toggleClass("active");
+
+      if(visible){
+        $headerRightControls.velocity({opacity:0}, 250,function () {
+          $headerRightControls.hide();
+        });
+        $selectOptions.velocity("transition.slideRightIn", 250);
+      }else{
+        $headerRightControls.show().velocity("reverse", 250);
+        $selectOptions.velocity("reverse", 250, function () {
+          $selectOptions.hide();
+        });
+      }
+      
       FauxtonAPI.Events.trigger("documents:show-select-all", visible);
     },
 
