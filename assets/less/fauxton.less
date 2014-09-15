@@ -1139,6 +1139,9 @@ div.add-dropdown {
       vertical-align: top;
       &:first-child {
         font-size: 24px;
+        float: left;
+        position: relative;
+        display: table-cell;
         .with-sidebar &,
         .two-pane & {
           padding:20px 10px;
@@ -1150,6 +1153,11 @@ div.add-dropdown {
       text-shadow: none;
       &.active{
         color: #333;
+        font-size: 24px;
+        position: relative;
+        display: table-cell;
+        vertical-align: middle;
+        line-height: normal;
       }
       a{
         text-decoration: none;
@@ -1167,6 +1175,9 @@ div.add-dropdown {
     top: 0;
     .dropdown-toggle {
       color: #666666;
+      &:before{
+        font-size: 20px;
+      }
     }
     a {
       padding: 10px;
