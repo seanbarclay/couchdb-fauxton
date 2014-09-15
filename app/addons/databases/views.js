@@ -199,7 +199,7 @@ function(app, Components, FauxtonAPI, Databases) {
   Views.NewDatabaseButton = FauxtonAPI.View.extend({
     template: "addons/databases/templates/newdatabase",
     events: {
-      "click a#new": "newDatabase"
+      "click button#new": "newDatabase"
     },
     newDatabase: function() {
       var notification;

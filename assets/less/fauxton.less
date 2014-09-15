@@ -845,13 +845,28 @@ div.spinner {
 
 #api-navbar{
   > div{
+    height: inherit;
     > .api-url-btn {
+      height: inherit;
       padding:10px;
     }
   }
 }
 
 .api-url-btn {
+  &:hover, &.active{
+      color: @linkColor;
+    }
+    &.icon{
+        font-size: 12px;
+      &:before{
+          margin-right: 8px;
+          font-size: 20px;
+          position: relative;
+          vertical-align: middle;
+      }
+    }
+  outline: none;
   .icon {
     font-size: 11px;
   }
@@ -1283,7 +1298,7 @@ div.add-dropdown {
   
   #header-right-controls {
     float: right;
-    > div, #header-api-bar > div{
+    > div, .button > div{
       float: right;
       height: inherit;
       margin: 0;
@@ -1319,11 +1334,6 @@ div.add-dropdown {
       height:60px;
       z-index: 2;
       color: #999;
-      .icon-search{
-        position: absolute;
-        top: 22px;
-        right: 15px;
-      }
     }
   }
 }
